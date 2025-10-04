@@ -13,8 +13,10 @@ const planetPositions = [
   { top: '55%', left: '80%' },
 ];
 
-const fileName = ref('Nenhum arquivo selecionado');
 const fileInput = ref(null);
+const selectedFile = ref(null);
+const fileName = ref('Nenhum arquivo selecionado');
+const url_path = 'http://localhost:8000'; // está para local host
 
 function openFileDialog() {
   if (fileInput.value) fileInput.value.click();
@@ -23,7 +25,25 @@ function openFileDialog() {
 function handleFileChange(event) {
   const file = event.target.files[0];
   if (file) {
+    selectedFile.value = file;
     fileName.value = file.name;
+  }
+}
+
+async function sendFile() {
+  if (!selectedFile.value) return;
+  const formData = new FormData();
+  formData.append('file', selectedFile.value);
+  try {
+    const response = await fetch(`${url_path}/predict`, {
+      method: 'POST',
+      body: formData,
+    });
+    const result = await response.json();
+    console.log('Resposta do backend:', result);
+    // Aqui você pode tratar o resultado como quiser
+  } catch (err) {
+    console.error('Erro ao enviar arquivo:', err);
   }
 }
 
@@ -121,7 +141,7 @@ function handleFileChange(event) {
               </svg>
             </span>
           </div>
-          <button class="import-btn">Send</button>
+          <button class="import-btn" @click="sendFile">Send</button>
         </div>
       </section>
 
