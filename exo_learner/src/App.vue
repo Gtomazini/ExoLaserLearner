@@ -4,6 +4,8 @@ import Landing from './components/Landing.vue';
 import PlanetOverlay from './components/PlanetOverlay.vue';
 
 // Posições dos planetas (em porcentagem da tela)
+import PredictionResults from './components/PredictionResults.vue';
+
 const planetPositions = [
   { top: '10%', left: '10%' },
   { top: '40%', left: '25%' },
@@ -18,6 +20,15 @@ const selectedFile = ref(null);
 const fileName = ref('Nenhum arquivo selecionado');
 const statusMsg = ref('');
 const url_path = 'http://localhost:8000'; // está para local host
+
+// Mock de resultados
+const predictions = ref([
+  { name: 'K00757.03', percent: 71 },
+  { name: 'K00754.01', percent: 31 },
+  { name: 'K00757.03', percent: 86 },
+  { name: 'K00754.01', percent: 19 },
+]);
+const selectedPrediction = ref(null);
 
 function openFileDialog() {
   if (fileInput.value) fileInput.value.click();
@@ -36,22 +47,19 @@ async function sendFile() {
     statusMsg.value = 'Selecione um arquivo primeiro';
     return;
   }
-  
   statusMsg.value = 'Enviando...';
-  
   const formData = new FormData();
   formData.append('file', selectedFile.value);
-  
   try {
     const response = await fetch(`${url_path}/predict`, {
       method: 'POST',
       body: formData,
     });
-    
     if (response.ok) {
       const result = await response.json();
       statusMsg.value = 'Sucesso!';
       console.log('Resposta do backend:', result);
+      // Aqui você pode atualizar predictions.value com o resultado real
     } else {
       statusMsg.value = 'Erro ao enviar';
     }
@@ -59,6 +67,10 @@ async function sendFile() {
     statusMsg.value = 'Erro de conexão';
     console.error('Erro ao enviar arquivo:', err);
   }
+}
+
+function selectPrediction(pred) {
+  selectedPrediction.value = pred;
 }
 
 
@@ -162,11 +174,9 @@ async function sendFile() {
         </div>
       </section>
 
-      <!-- SEÇÃO 3 -->
-      <section class="snap-section">
-        <h2>Seção 3</h2>
-        <p>Conteúdo da terceira sessão.</p>
-      </section>
+      <!-- SEÇÃO 3 - RESULTADO -->
+      <PredictionResults />
+
       <!-- SEÇÃO 4 -->
       <section class="snap-section">
         <h2>Seção 4</h2>
