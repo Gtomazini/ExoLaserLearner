@@ -16,6 +16,7 @@ const planetPositions = [
 const fileInput = ref(null);
 const selectedFile = ref(null);
 const fileName = ref('Nenhum arquivo selecionado');
+const statusMsg = ref('');
 const url_path = 'http://localhost:8000'; // está para local host
 
 function openFileDialog() {
@@ -31,21 +32,35 @@ function handleFileChange(event) {
 }
 
 async function sendFile() {
-  if (!selectedFile.value) return;
+  if (!selectedFile.value) {
+    statusMsg.value = 'Selecione um arquivo primeiro';
+    return;
+  }
+  
+  statusMsg.value = 'Enviando...';
+  
   const formData = new FormData();
   formData.append('file', selectedFile.value);
+  
   try {
     const response = await fetch(`${url_path}/predict`, {
       method: 'POST',
       body: formData,
     });
-    const result = await response.json();
-    console.log('Resposta do backend:', result);
-    // Aqui você pode tratar o resultado como quiser
+    
+    if (response.ok) {
+      const result = await response.json();
+      statusMsg.value = 'Sucesso!';
+      console.log('Resposta do backend:', result);
+    } else {
+      statusMsg.value = 'Erro ao enviar';
+    }
   } catch (err) {
+    statusMsg.value = 'Erro de conexão';
     console.error('Erro ao enviar arquivo:', err);
   }
 }
+
 
 </script>
 
@@ -77,6 +92,7 @@ async function sendFile() {
           
           <PlanetOverlay :style="{ position: 'absolute', top: planetPositions[2].top, left: planetPositions[2].left }">
             <img src="@/assets/landing_exoplanets/exo_green_blue.png" class="planet" alt="Exoplaneta Verde-Azul" />
+  
             <template #overlay>
               <div>
                 <div>EPIC 201126503.01</div>
@@ -142,6 +158,7 @@ async function sendFile() {
             </span>
           </div>
           <button class="import-btn" @click="sendFile">Send</button>
+          <div class="import-status">{{ statusMsg }}</div>
         </div>
       </section>
 
@@ -149,6 +166,11 @@ async function sendFile() {
       <section class="snap-section">
         <h2>Seção 3</h2>
         <p>Conteúdo da terceira sessão.</p>
+      </section>
+      <!-- SEÇÃO 4 -->
+      <section class="snap-section">
+        <h2>Seção 4</h2>
+        <p>Conteúdo da quarta sessão.</p>
       </section>
     </div>
   </div>
@@ -306,5 +328,12 @@ html, body {
 .snap-section h2,
 .snap-section p {
   color: #ffffff;
+.import-status {
+  margin-top: 18px;
+  font-size: 22px;
+  color: #fff;
+  text-align: center;
+  min-height: 28px;
+}
 }
 </style>
