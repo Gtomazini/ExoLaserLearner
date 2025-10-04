@@ -13,10 +13,20 @@ const planetPositions = [
   { top: '55%', left: '80%' },
 ];
 
+const fileName = ref('Nenhum arquivo selecionado');
 const fileInput = ref(null);
+
 function openFileDialog() {
   if (fileInput.value) fileInput.value.click();
 }
+
+function handleFileChange(event) {
+  const file = event.target.files[0];
+  if (file) {
+    fileName.value = file.name;
+  }
+}
+
 </script>
 
 <template>
@@ -96,6 +106,7 @@ function openFileDialog() {
             ref="fileInput"
             accept=".csv"
             style="display:none"
+            @change="handleFileChange"
             />
           <div class="import-file-row">
             <span class="icon-x">
@@ -103,7 +114,7 @@ function openFileDialog() {
                 <path d="M10 10L22 22M22 10L10 22" stroke="#c0392b" stroke-width="3" stroke-linecap="round"/>
               </svg>
             </span>
-            <span class="import-file">meu_data_set.csv</span>
+            <span class="import-file">{{ fileName }}</span>
             <span class="icon-check">
               <svg width="32" height="32" viewBox="0 0 32 32" fill="none">
                 <path d="M10 17L15 22L22 12" stroke="#27ae60" stroke-width="3" stroke-linecap="round"/>
