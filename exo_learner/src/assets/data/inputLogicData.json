@@ -1,0 +1,58 @@
+{
+  "fieldDescriptions": [
+    {
+      "field": "kepid",
+      "description": "ID do Kepler"
+    },
+    {
+      "field": "kepoi_name",
+      "description": "Nome do KOI"
+    },
+    {
+      "field": "koi_disposition",
+      "description": "Status oficial"
+    },
+    {
+      "field": "koi_period",
+      "description": "Período orbital"
+    },
+    {
+      "field": "koi_prad",
+      "description": "Raio do planeta"
+    },
+    {
+      "field": "koi_teq",
+      "description": "Temperatura de equilíbrio"
+    },
+    {
+      "field": "koi_depth",
+      "description": "Profundidade do trânsito"
+    },
+    {
+      "field": "koi_duration",
+      "description": "Duração do trânsito"
+    },
+    {
+      "field": "koi_steff",
+      "description": "Temperatura da estrela"
+    },
+    {
+      "field": "koi_srad",
+      "description": "Raio da estrela"
+    }
+  ],
+  "exampleData": [
+    {
+      "kepid": "10797460",
+      "kepoi_name": "K00757.03",
+      "koi_disposition": "CONFIRMED",
+      "koi_period": "9.488",
+      "koi_prad": "2.26",
+      "koi_teq": "793",
+      "koi_depth": "615.8",
+      "koi_duration": "2.96",
+      "koi_steff": "5455",
+      "koi_srad": "0.927"
+    }
+  ]
+}

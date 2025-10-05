@@ -190,7 +190,7 @@ function selectPrediction(pred) {
       <PredictionResults />
 
       <!-- SEÇÃO 4 - FAQ -->
-      <section class="snap-section faq-section">
+      <section class="faq-section-no-snap">
         <div class="faq-area">
           <div class="faq-title">Wiki/FAQ Area</div>
           <div class="faq-list">
@@ -275,6 +275,20 @@ html, body {
   justify-content: center;
   scroll-snap-align: center;
   background: transparent;
+}
+
+/* Seção FAQ com snap no início mas altura dinâmica */
+.faq-section-no-snap {
+  width: 100%;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  padding: 20px 0 80px 0;
+  background: transparent;
+  scroll-snap-align: start;
+  scroll-snap-stop: always;
 }
 
 /* SEÇÃO DOS PLANETAS */
@@ -379,11 +393,6 @@ html, body {
 }
 
 
-.faq-section {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
 .faq-area {
   width: 80vw;
   max-width: 900px;
