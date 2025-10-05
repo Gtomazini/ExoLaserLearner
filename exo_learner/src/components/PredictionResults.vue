@@ -2,7 +2,7 @@
   <section class="snap-section result-section">
     <div class="result-content">
       <div class="result-area">
-        <div class="result-title">Predictions</div>
+        <div class="result-title">Samples</div>
         <table class="result-table">
           <thead>
             <tr>

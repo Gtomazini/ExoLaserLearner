@@ -1,13 +1,20 @@
 <template>
     <div class="landing">
-        <h1>Bem-vindo ao Exo Learner</h1>
-        <p>Explore o universo com nossa plataforma interativa!</p>
+        <h1>{{ landingData.title }}</h1>
+        <p>{{ landingData.subtitle }}</p>
     </div>
 </template>
 
 <script>
+import commonsData from '../assets/data/commons.json';
+
 export default {
     name: 'Landing',
+    computed: {
+        landingData() {
+            return commonsData.landing;
+        }
+    }
 };
 </script>
 

@@ -5,6 +5,7 @@ import PlanetOverlay from './components/PlanetOverlay.vue';
 import FaqItem from './components/FaqItem.vue';
 import InputLogicTable from './components/InputLogicTable.vue';
 import PredictionResults from './components/PredictionResults.vue';
+import commonsData from '@/assets/data/commons.json';
 
 // Posições dos planetas (em porcentagem da tela)
 const planetPositions = [
@@ -19,9 +20,13 @@ const planetPositions = [
 
 const fileInput = ref(null);
 const selectedFile = ref(null);
-const fileName = ref('No file selected');
+const fileName = ref(commonsData.messages.noFileSelected);
 const statusMsg = ref('');
+const limitSamples = ref(false);
 const url_path = 'http://localhost:8000'; // está para local host
+
+// Dados comuns do JSON
+const commons = ref(commonsData);
 
 // Mock de resultados
 const predictions = ref([
@@ -47,7 +52,7 @@ function handleFileChange(event) {
 
 function clearFile() {
   selectedFile.value = null;
-  fileName.value = 'No file selected';
+  fileName.value = commons.value.messages.noFileSelected;
   statusMsg.value = '';
   // Limpar o input file
   if (fileInput.value) {
@@ -57,10 +62,10 @@ function clearFile() {
 
 async function sendFile() {
   if (!selectedFile.value) {
-    statusMsg.value = 'Please select a file first';
+    statusMsg.value = commons.value.messages.selectFileFirst;
     return;
   }
-  statusMsg.value = 'Enviando...';
+  statusMsg.value = commons.value.messages.uploading;
   const formData = new FormData();
   formData.append('file', selectedFile.value);
   try {
@@ -70,14 +75,14 @@ async function sendFile() {
     });
     if (response.ok) {
       const result = await response.json();
-      statusMsg.value = 'Sucesso!';
+      statusMsg.value = commons.value.messages.success;
       console.log('Resposta do backend:', result);
       // Aqui você pode atualizar predictions.value com o resultado real
     } else {
-      statusMsg.value = 'Erro ao enviar';
+      statusMsg.value = commons.value.messages.errorSending;
     }
   } catch (err) {
-    statusMsg.value = 'Erro de conexão';
+    statusMsg.value = commons.value.messages.connectionError;
     console.error('Erro ao enviar arquivo:', err);
   }
 }
@@ -171,7 +176,7 @@ function selectPrediction(pred) {
       <!-- SEÇÃO IMPORT TARGET -->
       <section class="snap-section import-section">
         <div class="import-area">
-            <button class="import-title" @click="openFileDialog">Import Target</button>
+            <button class="import-title" @click="openFileDialog">{{ commons.labels.importTarget }}</button>
             <input
             type="file"
             ref="fileInput"
@@ -192,7 +197,19 @@ function selectPrediction(pred) {
               </svg>
             </span>
           </div>
-          <button class="import-btn" @click="sendFile">Send</button>
+          <div class="custom-checkbox-row" style="margin-bottom: 24px;">
+            <label class="custom-checkbox-label tooltip-container" @click="limitSamples = !limitSamples" style="display:flex;align-items:center;gap:10px;cursor:pointer;position:relative;">
+              <span class="custom-checkbox" :class="{ checked: limitSamples }" style="width:24px;height:24px;border:2px solid #fff;border-radius:6px;display:inline-block;position:relative;">
+                <span v-if="limitSamples" style="position:absolute;top:2px;left:6px;width:10px;height:18px;border-right:3px solid #27ae60;border-bottom:3px solid #27ae60;transform:rotate(45deg);"></span>
+              </span>
+              <span style="color:#fff;font-size:22px;">{{ commons.labels.limitSamples }}</span>
+              <div class="tooltip">
+                <div class="tooltip-title">{{ commons.tooltips.limitSamples.title }}</div>
+                <div class="tooltip-text">{{ commons.tooltips.limitSamples.text }}</div>
+              </div>
+            </label>
+          </div>
+          <button class="import-btn" @click="sendFile">{{ commons.labels.send }}</button>
           <div class="import-status">{{ statusMsg }}</div>
         </div>
       </section>
@@ -400,6 +417,89 @@ html, body {
 
 .import-btn:hover {
   background: #222;
+}
+
+/* Custom Checkbox */
+.custom-checkbox-label {
+  transition: all 0.2s;
+  user-select: none;
+}
+
+.custom-checkbox-label:hover {
+  opacity: 0.8;
+}
+
+.custom-checkbox {
+  transition: all 0.2s;
+  background: transparent;
+}
+
+.custom-checkbox:hover {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.custom-checkbox.checked {
+  background: rgba(39, 174, 96, 0.1);
+  border-color: #27ae60 !important;
+}
+
+/* Tooltip */
+.tooltip-container {
+  position: relative;
+}
+
+.tooltip {
+  position: absolute;
+  bottom: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(0, 0, 0, 0.9);
+  color: #fff;
+  padding: 12px 16px;
+  border-radius: 8px;
+  font-size: 14px;
+  white-space: nowrap;
+  max-width: 280px;
+  white-space: normal;
+  z-index: 1000;
+  opacity: 0;
+  visibility: hidden;
+  transition: all 0.3s;
+  margin-bottom: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.tooltip::after {
+  content: '';
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 0;
+  height: 0;
+  border-left: 6px solid transparent;
+  border-right: 6px solid transparent;
+  border-top: 6px solid rgba(0, 0, 0, 0.9);
+}
+
+.tooltip-container:hover .tooltip {
+  opacity: 1;
+  visibility: visible;
+  transform: translateX(-50%) translateY(-4px);
+}
+
+.tooltip-title {
+  font-weight: 700;
+  font-size: 16px;
+  margin-bottom: 4px;
+  color: #27ae60;
+}
+
+.tooltip-text {
+  font-size: 13px;
+  line-height: 1.4;
+  color: #e0e0e0;
 }
 
 /* TEXTO DAS SEÇÕES */

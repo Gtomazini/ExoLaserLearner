@@ -1,0 +1,25 @@
+{
+  "tooltips": {
+    "limitSamples": {
+      "title": "Limit samples",
+    "text": "When enabled, it restricts the display of samples. If not enabled, performance consumption will increase, so enabling is recommended."
+    }
+  },
+  "messages": {
+    "noFileSelected": "No file selected",
+    "selectFileFirst": "Please select a file first",
+    "uploading": "Uploading...",
+    "success": "Success!",
+    "errorSending": "Error sending file",
+    "connectionError": "Connection error"
+  },
+  "labels": {
+    "importTarget": "Import Target",
+    "limitSamples": "Limit samples",
+    "send": "Send"
+  },
+  "landing": {
+    "title": "Bem-vindo ao Exo Learner",
+    "subtitle": "Explore o universo com nossa plataforma interativa!"
+  }
+}
