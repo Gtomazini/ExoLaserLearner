@@ -12,7 +12,7 @@ app = FastAPI(title="Exoplanet Prediction API")
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],  # ajuste conforme o domínio do seu front
+    allow_origins=["*"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
