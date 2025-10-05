@@ -11,7 +11,7 @@
             </tr>
           </thead>
           <tbody>
-            <tr v-for="(pred, idx) in paginatedPredictions" :key="pred.id || idx" :class="{ selected: selectedPrediction && selectedPrediction.name === pred.name && selectedPrediction.percent === pred.percent }" @click="selectPrediction(pred, getGlobalIndex(idx))">
+            <tr v-for="(pred, idx) in paginatedPredictions" :key="pred.id" :class="{ selected: selectedPrediction && selectedPrediction.id === pred.id }" @click="selectPrediction(pred, getGlobalIndex(idx))">
               <td>{{ pred.name }}</td>
               <td :style="{ color: pred.percent >= 50 ? '#27ae60' : '#c0392b', fontWeight: 'bold' }">{{ pred.percent }}</td>
             </tr>
@@ -50,7 +50,7 @@
             <div>
               <div>{{ selectedPrediction.name }}</div>
               <div :style="{ color: selectedPrediction.percent >= 50 ? '#27ae60' : '#c0392b', fontWeight: 'bold', marginTop: '8px' }">
-                {{ selectedPrediction.percent >= 50 ? 'TRUE' : 'FALSE' }}
+                {{ selectedPrediction.status || (selectedPrediction.percent >= 50 ? 'CANDIDATE' : 'FALSE POSITIVE') }}
               </div>
             </div>
           </template>
@@ -63,6 +63,7 @@
 <script setup>
 import { ref, onMounted, computed } from 'vue';
 import PlanetOverlay from './PlanetOverlay.vue';
+import predictionsData from '@/assets/data/predictionsData.json';
 
 // Importar todas as imagens da pasta dinamicamente (Vite)
 const planetModules = import.meta.glob('@/assets/response_exoplanets_examples/*.{png,jpg,jpeg,gif,svg}', { 
@@ -73,16 +74,32 @@ const planetModules = import.meta.glob('@/assets/response_exoplanets_examples/*.
 // Converter para array de URLs
 const availablePlanets = ref(Object.values(planetModules));
 
-const predictions = ref([
-  { name: 'K00757.03', percent: 71 },
-  { name: 'K00754.01', percent: 31 },
-  { name: 'K00757.03', percent: 86 },
-  { name: 'K00754.01', percent: 19 },
-  { name: 'K00758.02', percent: 65 },
-  { name: 'K00759.01', percent: 22 },
-  { name: 'K00760.03', percent: 78 },
-  { name: 'K00761.01', percent: 45 },
-]);
+// Dados das predições - agora vem do JSON, mas pode ser substituído por dados da API
+const predictions = ref(predictionsData.predictions);
+const metadata = ref(predictionsData.metadata);
+
+// Função para atualizar predições com dados da API (preparada para uso futuro)
+function updatePredictions(apiResponse) {
+  if (apiResponse && apiResponse.predictions) {
+    predictions.value = apiResponse.predictions;
+    metadata.value = apiResponse.metadata || {};
+    
+    // Reset da seleção e paginação quando novos dados chegarem
+    selectedPrediction.value = null;
+    currentPage.value = 1;
+    planetAssignments.value = {};
+    
+    // Selecionar o primeiro item automaticamente
+    if (predictions.value.length > 0) {
+      selectPrediction(predictions.value[0], 0);
+    }
+  }
+}
+
+// Expor função para componente pai
+defineExpose({
+  updatePredictions
+});
 
 // Paginação
 const currentPage = ref(1);
@@ -135,11 +152,8 @@ function selectPrediction(pred, globalIndex) {
 function getPlanetForSelection() {
   if (!selectedPrediction.value) return availablePlanets.value[0];
   
-  // Encontra o índice global da predição selecionada
-  const selectedIndex = predictions.value.findIndex(pred => 
-    pred.name === selectedPrediction.value.name && 
-    pred.percent === selectedPrediction.value.percent
-  );
+  // Encontra o índice global da predição selecionada usando o id
+  const selectedIndex = predictions.value.findIndex(pred => pred.id === selectedPrediction.value.id);
   
   return planetAssignments.value[selectedIndex] || availablePlanets.value[0];
 }

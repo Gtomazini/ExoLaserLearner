@@ -1,0 +1,18 @@
+{
+  "predictions": [
+    { "id": 1, "name": "K00757.03", "percent": 71, "status": "CANDIDATE" },
+    { "id": 2, "name": "K00754.01", "percent": 31, "status": "FALSE POSITIVE" },
+    { "id": 3, "name": "K00757.03", "percent": 86, "status": "CANDIDATE" },
+    { "id": 4, "name": "K00754.01", "percent": 19, "status": "FALSE POSITIVE" },
+    { "id": 5, "name": "K00758.02", "percent": 65, "status": "CANDIDATE" },
+    { "id": 6, "name": "K00759.01", "percent": 22, "status": "FALSE POSITIVE" },
+    { "id": 7, "name": "K00760.03", "percent": 78, "status": "CANDIDATE" },
+    { "id": 8, "name": "K00761.01", "percent": 45, "status": "FALSE POSITIVE" }
+  ],
+  "metadata": {
+    "totalSamples": 8,
+    "processedAt": "2024-10-05T10:30:00Z",
+    "modelVersion": "v1.2.3",
+    "accuracy": 0.85
+  }
+}

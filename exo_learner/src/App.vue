@@ -37,6 +37,9 @@ const predictions = ref([
 ]);
 const selectedPrediction = ref(null);
 
+// Referência para o componente PredictionResults
+const predictionResultsRef = ref(null);
+
 function openFileDialog() {
   if (fileInput.value) fileInput.value.click();
 }
@@ -47,6 +50,7 @@ function handleFileChange(event) {
     selectedFile.value = file;
     fileName.value = file.name;
     statusMsg.value = ''; // Limpar status anterior
+    limitSamples.value = true; // Marcar checkbox por padrão quando arquivo for carregado
   }
 }
 
@@ -77,7 +81,11 @@ async function sendFile() {
       const result = await response.json();
       statusMsg.value = commons.value.messages.success;
       console.log('Resposta do backend:', result);
-      // Aqui você pode atualizar predictions.value com o resultado real
+      
+      // Atualizar predições com dados da API
+      if (predictionResultsRef.value && result.predictions) {
+        predictionResultsRef.value.updatePredictions(result);
+      }
     } else {
       statusMsg.value = commons.value.messages.errorSending;
     }
@@ -215,7 +223,7 @@ function selectPrediction(pred) {
       </section>
 
       <!-- SEÇÃO 3 - RESULTADO -->
-      <PredictionResults />
+      <PredictionResults ref="predictionResultsRef" />
 
       <!-- SEÇÃO 4 - FAQ -->
       <section class="faq-section-no-snap">
