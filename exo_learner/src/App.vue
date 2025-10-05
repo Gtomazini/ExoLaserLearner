@@ -41,6 +41,17 @@ function handleFileChange(event) {
   if (file) {
     selectedFile.value = file;
     fileName.value = file.name;
+    statusMsg.value = ''; // Limpar status anterior
+  }
+}
+
+function clearFile() {
+  selectedFile.value = null;
+  fileName.value = 'Nenhum arquivo selecionado';
+  statusMsg.value = '';
+  // Limpar o input file
+  if (fileInput.value) {
+    fileInput.value.value = '';
   }
 }
 
@@ -169,13 +180,13 @@ function selectPrediction(pred) {
             @change="handleFileChange"
             />
           <div class="import-file-row">
-            <span class="icon-x">
+            <span v-if="selectedFile" class="icon-x" @click="clearFile">
               <svg width="32" height="32" viewBox="0 0 32 32" fill="none">
                 <path d="M10 10L22 22M22 10L10 22" stroke="#c0392b" stroke-width="3" stroke-linecap="round"/>
               </svg>
             </span>
             <span class="import-file">{{ fileName }}</span>
-            <span class="icon-check">
+            <span v-if="selectedFile" class="icon-check">
               <svg width="32" height="32" viewBox="0 0 32 32" fill="none">
                 <path d="M10 17L15 22L22 12" stroke="#27ae60" stroke-width="3" stroke-linecap="round"/>
               </svg>
@@ -359,6 +370,18 @@ html, body {
 .icon-check svg,
 .icon-x svg {
   vertical-align: middle;
+}
+
+.icon-x {
+  cursor: pointer;
+  transition: all 0.2s;
+  border-radius: 4px;
+  padding: 4px;
+}
+
+.icon-x:hover {
+  background: rgba(192, 57, 43, 0.1);
+  transform: scale(1.1);
 }
 
 .import-btn {
