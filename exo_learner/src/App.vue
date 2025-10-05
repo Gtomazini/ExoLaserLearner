@@ -2,10 +2,11 @@
 import { ref } from 'vue';
 import Landing from './components/Landing.vue';
 import PlanetOverlay from './components/PlanetOverlay.vue';
-
-// Posições dos planetas (em porcentagem da tela)
+import FaqItem from './components/FaqItem.vue';
+import InputLogicTable from './components/InputLogicTable.vue';
 import PredictionResults from './components/PredictionResults.vue';
 
+// Posições dos planetas (em porcentagem da tela)
 const planetPositions = [
   { top: '10%', left: '10%' },
   { top: '40%', left: '25%' },
@@ -13,6 +14,7 @@ const planetPositions = [
   { top: '20%', left: '75%' },
   { top: '70%', left: '20%' },
   { top: '55%', left: '80%' },
+  { top: '10%', left: '50%' },
 ];
 
 const fileInput = ref(null);
@@ -142,6 +144,16 @@ function selectPrediction(pred) {
               </div>
             </template>
           </PlanetOverlay>
+          
+          <PlanetOverlay :style="{ position: 'absolute', top: planetPositions[6].top, left: planetPositions[6].left }">
+            <img src="@/assets/landing_exoplanets/exo_blue_big.png" class="planet" alt="Exoplaneta Azul Grande" />
+            <template #overlay>
+              <div>
+                <div>EPIC 201126503.01</div>
+                <div style="margin-top:8px;font-weight:bold;">CANDIDATE</div>
+              </div>
+            </template>
+          </PlanetOverlay>
         </div>
       </section>
 
@@ -177,11 +189,30 @@ function selectPrediction(pred) {
       <!-- SEÇÃO 3 - RESULTADO -->
       <PredictionResults />
 
-      <!-- SEÇÃO 4 -->
-      <section class="snap-section">
-        <h2>Seção 4</h2>
-        <p>Conteúdo da quarta sessão.</p>
+      <!-- SEÇÃO 4 - FAQ -->
+      <section class="snap-section faq-section">
+        <div class="faq-area">
+          <div class="faq-title">Wiki/FAQ Area</div>
+          <div class="faq-list">
+            <FaqItem title="How it works?">
+              <div>
+                <p style="color:#fff;">Conteúdo explicativo sobre funcionamento...</p>
+              </div>
+            </FaqItem>
+            <FaqItem title="Input Logic">
+              <InputLogicTable />
+            </FaqItem>
+
+            <FaqItem title="Team Work">
+              <div>
+                <p style="color:#fff;">Conteúdo sobre colaboração, equipe e desenvolvimento do projeto...</p>
+              </div>
+            </FaqItem>
+          </div>
+        </div>
       </section>
+
+
     </div>
   </div>
 </template>
@@ -345,5 +376,37 @@ html, body {
   text-align: center;
   min-height: 28px;
 }
+}
+
+
+.faq-section {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.faq-area {
+  width: 80vw;
+  max-width: 900px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.faq-title {
+  width: 100%;
+  background: #bdbdbd;
+  color: #222;
+  font-size: 2.2rem;
+  text-align: center;
+  font-weight: 500;
+  margin-bottom: 32px;
+  padding: 8px 0;
+  border-radius: 2px;
+}
+.faq-list {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
 }
 </style>
