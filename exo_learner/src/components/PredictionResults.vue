@@ -11,7 +11,7 @@
             </tr>
           </thead>
           <tbody>
-            <tr v-for="(pred, idx) in predictions" :key="idx" :class="{ selected: selectedPrediction && selectedPrediction.name === pred.name && selectedPrediction.percent === pred.percent }" @click="selectPrediction(pred)">
+            <tr v-for="(pred, idx) in predictions" :key="idx" :class="{ selected: selectedPrediction && selectedPrediction.name === pred.name && selectedPrediction.percent === pred.percent }" @click="selectPrediction(pred, idx)">
               <td>{{ pred.name }}</td>
               <td :style="{ color: pred.percent >= 50 ? '#27ae60' : '#c0392b', fontWeight: 'bold' }">{{ pred.percent }}</td>
             </tr>
@@ -20,7 +20,7 @@
       </div>
       <div v-if="selectedPrediction" class="result-planet-side">
         <PlanetOverlay>
-          <img src="@/assets/response_exoplanets_examples/amostra1.png" style="width:440px;" alt="Planeta" />
+          <img :src="getPlanetForSelection()" style="width:440px;" alt="Planeta" />
           <template #overlay>
             <div>
               <div>{{ selectedPrediction.name }}</div>
@@ -36,8 +36,17 @@
 </template>
 
 <script setup>
-import { ref } from 'vue';
+import { ref, onMounted } from 'vue';
 import PlanetOverlay from './PlanetOverlay.vue';
+
+// Importar todas as imagens da pasta dinamicamente (Vite)
+const planetModules = import.meta.glob('@/assets/response_exoplanets_examples/*.{png,jpg,jpeg,gif,svg}', { 
+  eager: true, 
+  import: 'default' 
+});
+
+// Converter para array de URLs
+const availablePlanets = ref(Object.values(planetModules));
 
 const predictions = ref([
   { name: 'K00757.03', percent: 71 },
@@ -47,9 +56,41 @@ const predictions = ref([
 ]);
 const selectedPrediction = ref(null);
 
-function selectPrediction(pred) {
-  selectedPrediction.value = pred;
+// Armazena o planeta associado a cada item (índice da predição → caminho da imagem)
+const planetAssignments = ref({});
+
+function getRandomPlanet() {
+  const randomIndex = Math.floor(Math.random() * availablePlanets.value.length);
+  return availablePlanets.value[randomIndex];
 }
+
+function selectPrediction(pred, index) {
+  selectedPrediction.value = pred;
+  
+  // Se o item ainda não tem um planeta associado, sorteia um
+  if (!planetAssignments.value[index]) {
+    planetAssignments.value[index] = getRandomPlanet();
+  }
+}
+
+function getPlanetForSelection() {
+  if (!selectedPrediction.value) return availablePlanets.value[0];
+  
+  // Encontra o índice da predição selecionada
+  const selectedIndex = predictions.value.findIndex(pred => 
+    pred.name === selectedPrediction.value.name && 
+    pred.percent === selectedPrediction.value.percent
+  );
+  
+  return planetAssignments.value[selectedIndex] || availablePlanets.value[0];
+}
+
+// Selecionar o primeiro item automaticamente quando o componente for montado
+onMounted(() => {
+  if (predictions.value.length > 0) {
+    selectPrediction(predictions.value[0], 0);
+  }
+});
 </script>
 
 <style scoped>
