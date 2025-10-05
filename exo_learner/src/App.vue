@@ -19,7 +19,7 @@ const planetPositions = [
 
 const fileInput = ref(null);
 const selectedFile = ref(null);
-const fileName = ref('Nenhum arquivo selecionado');
+const fileName = ref('No file selected');
 const statusMsg = ref('');
 const url_path = 'http://localhost:8000'; // está para local host
 
@@ -47,7 +47,7 @@ function handleFileChange(event) {
 
 function clearFile() {
   selectedFile.value = null;
-  fileName.value = 'Nenhum arquivo selecionado';
+  fileName.value = 'No file selected';
   statusMsg.value = '';
   // Limpar o input file
   if (fileInput.value) {
@@ -57,7 +57,7 @@ function clearFile() {
 
 async function sendFile() {
   if (!selectedFile.value) {
-    statusMsg.value = 'Selecione um arquivo primeiro';
+    statusMsg.value = 'Please select a file first';
     return;
   }
   statusMsg.value = 'Enviando...';
