@@ -1,3 +1,7 @@
+# Pixel Exo Sketch
+AI models were used in development - Copilot, Claude, Gemini Pro
+
+
 # 🚀 Project Setup & Execution
 Prerequisites
 
