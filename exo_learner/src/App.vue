@@ -30,10 +30,10 @@ const commons = ref(commonsData);
 
 // Mock de resultados
 const predictions = ref([
-  { name: 'K00757.03', percent: 71 },
-  { name: 'K00754.01', percent: 31 },
-  { name: 'K00757.03', percent: 86 },
-  { name: 'K00754.01', percent: 19 },
+  { name: 'K01666.01', percent: 98 },
+  { name: 'K01667.01', percent: 31 },
+  { name: 'K01668.01', percent: 0.02 },
+  { name: 'K01670.01', percent: 99 },
 ]);
 const selectedPrediction = ref(null);
 
@@ -110,12 +110,36 @@ function selectPrediction(pred) {
   selectedPrediction.value = pred;
 }
 
+// Função para navegar entre seções
+function scrollToSection(sectionClass) {
+  const section = document.querySelector(`.${sectionClass}`);
+  if (section) {
+    section.scrollIntoView({ 
+      behavior: 'smooth',
+      block: 'center'
+    });
+  }
+}
+
 
 </script>
 
 <template>
   <div class="app-bg">
     <div class="snap-container">
+      <!-- SEÇÃO DE APRESENTAÇÃO -->
+      <section class="snap-section presentation-section">
+        <div class="presentation-content">
+          <h1 class="presentation-title">Welcome to Pixel Exo Sketch</h1>
+          <div class="navigation-buttons">
+            <button class="nav-btn" @click="scrollToSection('planet-section')">Explore Planets</button>
+            <button class="nav-btn" @click="scrollToSection('import-section')">Import Data</button>
+            <button class="nav-btn" @click="scrollToSection('result-section')">View Results</button>
+            <button class="nav-btn" @click="scrollToSection('faq-section-no-snap')">FAQ</button>
+          </div>
+        </div>
+      </section>
+
       <!-- SEÇÃO DOS PLANETAS -->
       <section class="snap-section planet-section">
         <div class="planet-space">
@@ -243,7 +267,17 @@ function selectPrediction(pred) {
           <div class="faq-list">
             <FaqItem title="How it works?">
               <div>
-                <p style="color:#fff;">Conteúdo explicativo sobre funcionamento...</p>
+                <ul style="color:#fff;">
+                  <li>
+                    <strong>1. Accepted formats:</strong> Only CSV files are supported. Please ensure your file follows the required structure.
+                  </li>
+                  <li>
+                    <strong>2. Import section:</strong> Go to the Import Data section and upload your .csv file using the provided button.
+                  </li>
+                  <li>
+                    <strong>3. Results:</strong> If the analysis is successful, you will be automatically redirected to the results section.
+                  </li>
+                </ul>
               </div>
             </FaqItem>
             <FaqItem title="Input Logic">
@@ -252,7 +286,53 @@ function selectPrediction(pred) {
 
             <FaqItem title="Team Work">
               <div>
-                <p style="color:#fff;">Conteúdo sobre colaboração, equipe e desenvolvimento do projeto...</p>
+                <ul style="color:#fff;">
+                  <li><strong>Team:</strong> Bacuri Lattes 2025</li>
+                  <li>Gabriel Tomazini</li>
+                  <li>Eric Guilherme dos Santos</li>
+                  <li>Matheus Francisco Ferreira</li>
+                  <li>Nathan Raposo</li>
+                  <li>Guilherme Rodrigues</li>
+                </ul>
+              </div>
+            </FaqItem>
+
+            <FaqItem title="Model Log">
+              <div class="model-log">
+                <div class="log-header">
+                  ======================================================================<br>
+                  <strong>FASE 1: TREINAMENTO DO MODELO FINAL (XGBOOST)</strong><br>
+                  ======================================================================
+                </div>
+                <div class="log-content">
+                  📂 Dataset não encontrado localmente.<br>
+                  📥 Baixando dataset da NASA Exoplanet Archive...<br>
+                  &nbsp;&nbsp;&nbsp;URL: https://exoplanetarchive.ipac.caltech.edu/TAP/sync?query=select+*+from+cumulative&format=csv<br>
+                  ✅ Dataset baixado com sucesso!<br>
+                  📖 Carregando dataset<br>
+                  ✅ Dataset carregado: <strong>9564 registros</strong><br>
+                  📊 Registros após filtro: <strong>7585 (CONFIRMED + FALSE POSITIVE)</strong><br>
+                  🎯 Dados prontos para treino: <strong>7326 amostras e 15 features</strong><br>
+                  &nbsp;&nbsp;&nbsp;- Confirmados: <span style="color:#27ae60">2744</span><br>
+                  &nbsp;&nbsp;&nbsp;- Falsos Positivos: <span style="color:#c0392b">4582</span><br><br>
+                  
+                  🚀 Treinando o modelo XGBoost...<br>
+                  <span style="color:#ffd700">Parameters: { "use_label_encoder" } are not used.</span><br><br>
+                  
+                  &nbsp;&nbsp;bst.update(dtrain, iteration=i, fobj=obj)<br>
+                  ✅ Modelo treinado com sucesso!<br><br>
+                  
+                  📈 <strong style="color:#27ae60">ACURÁCIA FINAL DO MODELO: 99.68%</strong><br><br>
+                  
+                  💾 Arquivos salvos:<br>
+                  &nbsp;&nbsp;&nbsp;- Modelo<br>
+                  &nbsp;&nbsp;&nbsp;- Scaler<br>
+                  &nbsp;&nbsp;&nbsp;- Features<br><br>
+                  
+                  ✅ <strong style="color:#27ae60">SERVIDOR PRONTO!</strong><br>
+                  ======================================================================<br>
+                  <span style="color:#00bfff">INFO: Application startup complete.</span>
+                </div>
               </div>
             </FaqItem>
           </div>
@@ -342,6 +422,66 @@ html, body {
 .planet-section {
   position: relative;
   overflow: visible;
+}
+
+/* SEÇÃO DE APRESENTAÇÃO */
+.presentation-section {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+
+.presentation-content {
+  max-width: 900px;
+  padding: 0 40px;
+}
+
+.presentation-title {
+  font-size: 4rem;
+  color: #ffffff;
+  font-weight: 700;
+  text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.7);
+  letter-spacing: 2px;
+  margin: 0 0 40px 0;
+  background: linear-gradient(45deg, #ffffff, #e0e0e0);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.navigation-buttons {
+  display: flex;
+  gap: 24px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.nav-btn {
+  background: rgba(74, 74, 74, 0.9);
+  color: #ffffff;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-radius: 12px;
+  padding: 16px 32px;
+  font-size: 18px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  backdrop-filter: blur(10px);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+  letter-spacing: 1px;
+}
+
+.nav-btn:hover {
+  background: rgba(255, 255, 255, 0.1);
+  border-color: rgba(255, 255, 255, 0.6);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+}
+
+.nav-btn:active {
+  transform: translateY(0);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
 }
 
 .planet-space {
@@ -559,5 +699,30 @@ html, body {
   display: flex;
   flex-direction: column;
   gap: 24px;
+}
+
+/* MODEL LOG STYLES */
+.model-log {
+  color: #fff;
+  font-family: 'Courier New', monospace;
+  font-size: 14px;
+  line-height: 1.6;
+  background: #1a1a1a;
+  border-radius: 8px;
+  padding: 20px;
+  border-left: 4px solid #27ae60;
+  overflow-x: auto;
+}
+
+.log-header {
+  color: #ffd700;
+  font-weight: bold;
+  text-align: center;
+  margin-bottom: 16px;
+  font-size: 13px;
+}
+
+.log-content {
+  white-space: pre-line;
 }
 </style>
