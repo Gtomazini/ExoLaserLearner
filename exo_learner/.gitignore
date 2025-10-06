@@ -28,3 +28,34 @@ coverage
 *.sw?
 
 *.tsbuildinfo
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+*.egg
+*.egg-info/
+dist/
+build/
+*.pyc
+*.pyo
+*.pyd
+
+# Ambientes virtuais Python
+venv/
+env/
+ENV/
+.venv/
+
+# Modelos de Machine Learning e datasets
+*.joblib
+*.pkl
+*.h5
+*.model
+cumulative_dataset.csv
+*.csv
+
+# Jupyter Notebooks
+.ipynb_checkpoints/
+*.ipynb
