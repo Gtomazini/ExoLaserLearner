@@ -86,6 +86,17 @@ async function sendFile() {
       if (predictionResultsRef.value && result.predictions) {
         predictionResultsRef.value.updatePredictions(result);
       }
+      
+      // Rolar para a seção de resultados após sucesso
+      setTimeout(() => {
+        const resultSection = document.querySelector('.result-section');
+        if (resultSection) {
+          resultSection.scrollIntoView({ 
+            behavior: 'smooth',
+            block: 'center'
+          });
+        }
+      }, 500); // Delay para permitir que a UI atualize
     } else {
       statusMsg.value = commons.value.messages.errorSending;
     }
