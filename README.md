@@ -7,6 +7,8 @@ AI models were used in development - Copilot, Claude, Gemini Pro
 
 access here: https://exo-laser-learner-ce4u.vercel.app/
 
+file as example for tests porpuses: cumulative_2025.10.05_03.56.05.csv
+
 # 🚀 Project Setup & Execution
 Prerequisites
 
