@@ -280,7 +280,7 @@ function scrollToSection(sectionClass) {
                 </ul>
               </div>
             </FaqItem>
-            <FaqItem title="Input  Logic">
+            <FaqItem title="Input test Logic">
               <InputLogicTable />
             </FaqItem>
 
