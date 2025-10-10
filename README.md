@@ -1,4 +1,7 @@
 # Pixel Exo Sketch
+
+About
+It is a prediction tool that receives data readings in the Kepler model and returns the result rate of an exoplanet.
 AI models were used in development - Copilot, Claude, Gemini Pro
 
 
